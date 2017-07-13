@@ -14,6 +14,6 @@ int main()
 	scanf("%d",&n);
 	a=(double *)malloc(sizeof(double)*n);
 	for(i=0;i<n;i++) scanf("%lf",a+i);
-	printf("%lf\n",reduce([](double a,double b){ return a*b; },a,a+n));
+	printf("%lf\n",reduce([](double a,double b){ return a+b; },a,a+n));
 	return 0;
 }
