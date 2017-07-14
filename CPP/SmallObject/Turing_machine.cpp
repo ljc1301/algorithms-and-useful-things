@@ -61,8 +61,8 @@ bool read()
 	char str[maxn],str2[maxn],str3[maxn];
 	string temp;
 	vector<string> ret,ret2;
-	printf("Please input the number of m-config. and run time(0 0 to end):");
-	if(!(scanf("%d %d",&n,&len)==2 && n && len)) return false;
+	printf("Please input the number of m-config., run time and frequency(0 0 0 to end):");
+	if(!(scanf("%d %d %d",&n,&len,&frequency)==3 && n && len)) return false;
 	for(i=0;i<n;i++)
 	{
 		printf("Please input the name and the number of transfer #%d:",i);
@@ -131,12 +131,12 @@ bool change()
 }
 int main()
 {
-	system("mode con cols=120");
+	system("mode con cols=120 lines=40");
 	init();
 	while(read())
 	{
-		print();
-		while(len-- && change()) print();
+		system("cls");
+		while(len-- && change()) if(!(len%frequency)) print();
 		del();
 		printf("\n");
 		system("pause");
