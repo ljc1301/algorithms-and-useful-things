@@ -18,7 +18,7 @@ def trim(s):
     while l<=r and (s[r]==' ' or s[r]=='\t' or s[r]=='\n' or s[r]=='\r'):
         r-=1
     return s[l:r+1]
-def print_table(table):
+def print_title():
     slen=(7,30,30,10,10,8,10,7,9,8,20)
     ss=('编号','用户','题目','状态','分数','耗时','内存','语言','代码长度','测评机','提交时间')
     def pr(s,l):
@@ -29,6 +29,14 @@ def print_table(table):
     for i in range(len(slen)):
         pr(ss[i],slen[i])
     print('')
+def print_table(table):
+    slen=(7,30,30,10,10,8,10,7,9,8,20)
+    ss=('编号','用户','题目','状态','分数','耗时','内存','语言','代码长度','测评机','提交时间')
+    def pr(s,l):
+        le=my_len(s)
+        if le>l:
+            le=l
+        print(s,end=(l-le)*' ')
     for i in table:
         cnt=0
         if len(i)<len(slen): i.insert(9,'')
@@ -85,6 +93,7 @@ def read(s='http://oi.wzms.com/solutions'):
                         table[-1].append(rechange(trim(k.text)))
     return table
 table=[]
+print_title()
 t=read()
 while t:
     table.extend(t)
