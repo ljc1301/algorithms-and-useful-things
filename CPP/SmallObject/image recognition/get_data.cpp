@@ -113,7 +113,7 @@ int main()
 		//	}
 	}
 	printf("cost: %lf\nWriting...\n",cost());
-	data=fopen("data","w");
+	data=fopen("bitmaps\\data","w");
 	for(i=0;i<lnum;i++)
 	{
 		if(i) fprintf(data,"\n");
