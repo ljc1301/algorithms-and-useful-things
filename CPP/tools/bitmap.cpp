@@ -48,12 +48,13 @@ int main()
             for(j=0;j<width;j++)
             { 
                 cnt=0;
-                for(k=max(0,i-1);k<=min(height,i+1);k++)
-                for(l=max(0,j-1);l<=min(width,j+1);l++)
-                if(k!=i || l!=j)
-                if(!equ(img[i][j],img[k][l]))
-                cnt++;
-                if(cnt>(min(height,i+1)-max(0,i-1)+1)*(min(width,j+1)-max(0,j-1)+1)/2)
+                for(k=max(0,i-1);k<=min(height-1,i+1);k++)
+                	for(l=max(0,j-1);l<=min(width-1,j+1);l++)
+	                	if(k!=i || l!=j)
+		                	if(!equ(img[i][j],img[k][l]))
+		                		cnt++;
+                //if(cnt>(min(height,i+1)-max(0,i-1)+1)*(min(width,j+1)-max(0,j-1)+1)/2)
+                if(cnt)
                     fwrite(&black,sizeof(RGB),1,out);
                 else
                     fwrite(&white,sizeof(RGB),1,out);
