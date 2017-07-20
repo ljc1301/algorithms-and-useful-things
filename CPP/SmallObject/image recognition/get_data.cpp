@@ -61,7 +61,7 @@ int main()
 	lnum=n=0;
 	printf("Please input compute time(sec) and delta: ");
 	scanf("%lf %lf",&t,&d);
-	printf("Reading...\nDirectory name(Ctrl+Z to end): bitmaps\\");
+	printf("Directory name(Ctrl+Z to end): bitmaps\\");
 	while(scanf("%s",lables[lnum])==1)
 	{
 		for(k=0;;k++)
@@ -72,6 +72,7 @@ int main()
 			fread(&fileHeader,sizeof(BITMAPFILEHEADER),1,pic);
 			fread(&infoHeader,sizeof(BITMAPINFOHEADER),1,pic);
 			if(infoHeader.biBitCount!=24) { fclose(pic); break; }
+			printf("Reading %s...\n",name);
 			num[n]=lnum;
 	        height=infoHeader.biHeight;
 	        width=infoHeader.biWidth;
