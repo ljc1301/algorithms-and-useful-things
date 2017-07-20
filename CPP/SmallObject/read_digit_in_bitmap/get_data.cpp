@@ -11,13 +11,13 @@ typedef struct
     BYTE g;
     BYTE r;
 }RGB;
-const int r=5,c=3;
-int height,width,cnt[r*c],n,num[100000];
+const int r=5,c=3,max_lable_num=1000,max_bitmap_num=100000;
+int height,width,cnt[r*c],n,num[max_bitmap_num],lnum;
 RGB img[1500][1500];
-double sum[100000][r*c],ans[10][r*c],t,d;
+double sum[max_bitmap_num][r*c],ans[max_bitmap_num][r*c],t,d;
 unsigned char unuse;
-long long lt,ld;
-char name[100];
+long long lt;
+char name[100],lables[max_lable_num][100];
 BITMAPFILEHEADER fileHeader;
 BITMAPINFOHEADER infoHeader;
 FILE *pic,*data;
@@ -25,19 +25,19 @@ double sigma(double x) { if(exp(-x)==1/1.0) return 0; return 1/(1+exp(-x)); }
 double cost()
 {
 	int i,j,k;
-	double ret=0,add,psum,p[10];
+	double ret=0,add,psum,p[max_lable_num];
 	for(i=0;i<n;i++)
 	{
 		psum=0;
-		for(j=0;j<10;j++)
+		for(j=0;j<lnum;j++)
 		{
 			add=0;
 			for(k=0;k<r*c;k++)
 				add+=ans[j][k]*sum[i][k];
 			psum+=(p[j]=sigma(add));
 		}
-		for(j=0;j<10;j++) p[j]/=psum;
-		for(j=0;j<10;j++)
+		for(j=0;j<lnum;j++) p[j]/=psum;
+		for(j=0;j<lnum;j++)
 			if(j==num[i]) ret+=1-p[j];
 			else ret+=p[j];
 	}
@@ -55,23 +55,24 @@ double dcost(int a,int b)
 }
 int main()
 {
-	int i,j,a,k,l;
+	int i,j,a,k;
 	double temp;
 	srand(time(NULL));
-	n=0;
+	lnum=n=0;
 	printf("Please input compute time(sec) and delta: ");
 	scanf("%lf %lf",&t,&d);
-	printf("Reading...\n");
-	for(k=0;k<10;k++)
-		for(l=0;;l++)
+	printf("Reading...\nDirectory name(Ctrl+Z to end): bitmaps\\");
+	while(scanf("%s",lables[lnum])==1)
+	{
+		for(k=0;;k++)
 		{
-			name[0]='\0'; sprintf(name,"bitmaps\\%d\\%d.bmp",k,l);
+			name[0]='\0'; sprintf(name,"bitmaps\\%s\\%d.bmp",lables[lnum],k);
 			pic=fopen(name,"rb");
 			if(pic==NULL) break;
 			fread(&fileHeader,sizeof(BITMAPFILEHEADER),1,pic);
 			fread(&infoHeader,sizeof(BITMAPINFOHEADER),1,pic);
 			if(infoHeader.biBitCount!=24) { fclose(pic); break; }
-			num[n]=k;
+			num[n]=lnum;
 	        height=infoHeader.biHeight;
 	        width=infoHeader.biWidth;
 	        if(width%4!=0) a=4-(width*3)%4;
@@ -94,26 +95,29 @@ int main()
 	    	fclose(pic);
 			n++;
 		}
+		lnum++;
+		printf("Directory name(Ctrl+Z to end): bitmaps\\");
+	}
 	printf("Computing...\n");
-	ld=lt=clock();
-	for(i=0;i<10;i++) for(j=0;j<r*c;j++) ans[i][j]=rand()/10000.0;
-	a=0;
+	lt=clock();
+	for(i=0;i<lnum;i++) for(j=0;j<r*c;j++) ans[i][j]=rand()/10000.0;
 	while(clock()-lt<CLOCKS_PER_SEC*t)
 	{
-		i=rand()%10; j=rand()%(r*c);
-		//for(i=0;i<10;i++)
-			//for(j=0;j<r*c;j++)
-			//{
+		i=rand()%lnum; j=rand()%(r*c);
+		//for(i=0;i<lnum;i++)
+		//	for(j=0;j<r*c;j++)
+		//	{
 				temp=dcost(i,j);
 				if(abs(temp)>1e-8)
 					ans[i][j]-=temp/d;
-			//}
+		//	}
 	}
 	printf("cost: %lf\nWriting...\n",cost());
 	data=fopen("data","w");
-	for(i=0;i<10;i++)
+	for(i=0;i<lnum;i++)
 	{
 		if(i) fprintf(data,"\n");
+		fprintf(data,"%s\n",lables[i]);
 		for(j=0;j<r*c;j++)
 			if((j+1)%c) fprintf(data,"%lf ",ans[i][j]);
 			else fprintf(data,"%lf\n",ans[i][j]);
