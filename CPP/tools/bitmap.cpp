@@ -8,8 +8,8 @@ typedef struct
     BYTE g;
     BYTE r;
 }RGB;
-int height,width,size,i,j,k,l,a,cnt;
-RGB img[640][640];
+int height,width,size,i,j,k,l,a,cnt,eps;
+RGB img[1280][1280];
 unsigned char unuse;
 BITMAPFILEHEADER fileHeader;
 BITMAPINFOHEADER infoHeader;
@@ -19,7 +19,7 @@ const RGB white={255,255,255};
 bool equ(RGB a,RGB b)
 {
     return ((int)a.r-b.r)*((int)a.r-b.r)+((int)a.g-b.g)*((int)a.g-b.g)
-             +((int)a.b-b.b)*((int)a.b-b.b)<200;
+             +((int)a.b-b.b)*((int)a.b-b.b)<eps;
 }
 int main()
 {
@@ -36,6 +36,7 @@ int main()
         size=width*height;
         if(width%4!=0) a=4-(width*3)%4;
         else a=0;
+        scanf("%d",&eps);
         for(i=0;i<height;i++)
         {
             fread(img[i],sizeof(RGB),width,pic);
@@ -61,7 +62,7 @@ int main()
                 fwrite(&unuse,1,1,out);
         }
         fclose(out);
-        system("mspaint.exe ans.bmp");
+        system("start mspaint.exe ans.bmp");
     }
     fclose(pic);
     return 0;
