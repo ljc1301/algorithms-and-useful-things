@@ -58,7 +58,7 @@ int main()
 						cnt[a]++;
 					}
 				for(i=0;i<r*c;i++) sum[i]/=cnt[i];
-	    		data=fopen("data","r");
+	    		data=fopen("bitmaps\\data","r");
 	    		lnum=0; psum=0;
 				for(i=0;fscanf(data,"%s",numbers[i].lable)==1;i++,lnum++)
 				{
