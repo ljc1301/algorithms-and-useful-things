@@ -71,7 +71,7 @@ int main()
 				for(i=0;i<lnum;i++) numbers[i].p/=psum;
 				sort(numbers,numbers+lnum);
 				for(i=0;i<lnum;i++)
-					printf("%10s: %.1lf%%\n",numbers[i].lable,100*numbers[i].p);
+					printf("%-10s: %.1lf%%\n",numbers[i].lable,100*numbers[i].p);
 				fclose(data);
 		    }
 		    fclose(pic);
