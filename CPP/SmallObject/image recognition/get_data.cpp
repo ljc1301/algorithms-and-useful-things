@@ -14,7 +14,7 @@ typedef struct
 const int r=5,c=3,max_lable_num=1000,max_bitmap_num=100000;
 int height,width,cnt[r*c],n,num[max_bitmap_num],lnum;
 RGB img[1500][1500];
-double sum[max_bitmap_num][r*c],ans[max_bitmap_num][r*c],t,d;
+double sum[max_bitmap_num][r*c],ans[max_bitmap_num][r*c+1],t,d;
 unsigned char unuse;
 long long lt;
 char name[100],lables[max_lable_num][100];
@@ -25,7 +25,8 @@ double sigma(double x) { if(exp(-x)==1/1.0) return 0; return 1/(1+exp(-x)); }
 double cost()
 {
 	int i,j,k;
-	double ret=0,add,psum,p[max_lable_num];
+	double ret=0,add,p[max_lable_num];
+	double psum;
 	for(i=0;i<n;i++)
 	{
 		psum=0;
@@ -34,7 +35,7 @@ double cost()
 			add=0;
 			for(k=0;k<r*c;k++)
 				add+=ans[j][k]*sum[i][k];
-			psum+=(p[j]=sigma(add));
+			psum+=(p[j]=sigma(add+ans[i][r*c]));
 		}
 		for(j=0;j<lnum;j++) p[j]/=psum;
 		for(j=0;j<lnum;j++)
@@ -89,7 +90,7 @@ int main()
 				for(j=0;j<width;j++)
 				{
 					a=(int)(floor(i*1.0/height*r)*c+floor(j*1.0/width*c));
-					sum[n][a]+=1-(img[i][j].r+img[i][j].g+img[i][j].b)/765.0;
+					sum[n][a]+=((int)img[i][j].r+img[i][j].g+img[i][j].b)/765.0;
 					cnt[a]++;
 				}
 			for(i=0;i<r*c;i++) sum[n][i]/=cnt[i];
@@ -104,7 +105,7 @@ int main()
 	for(i=0;i<lnum;i++) for(j=0;j<r*c;j++) ans[i][j]=rand()/10000.0;
 	while(clock()-lt<CLOCKS_PER_SEC*t)
 	{
-		i=rand()%lnum; j=rand()%(r*c);
+		i=rand()%lnum; j=rand()%(r*c+1);
 		//for(i=0;i<lnum;i++)
 		//	for(j=0;j<r*c;j++)
 		//	{
@@ -119,7 +120,7 @@ int main()
 	{
 		if(i) fprintf(data,"\n");
 		fprintf(data,"%s\n",lables[i]);
-		for(j=0;j<r*c;j++)
+		for(j=0;j<=r*c;j++)
 			if((j+1)%c) fprintf(data,"%lf ",ans[i][j]);
 			else fprintf(data,"%lf\n",ans[i][j]);
 	}
