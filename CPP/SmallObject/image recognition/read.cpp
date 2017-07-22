@@ -19,7 +19,8 @@ struct number
 const int r=5,c=3;
 int height,width,i,j,a,cnt[r*c],lnum;
 RGB img[1500][1500];
-double sum[r*c],t,add,psum;
+double sum[r*c],t,add;
+double psum;
 char name[100];
 unsigned char unuse;
 BITMAPFILEHEADER fileHeader;
@@ -54,17 +55,20 @@ int main()
 					for(j=0;j<width;j++)
 					{
 						a=(int)(floor(i*1.0/height*r)*c+floor(j*1.0/width*c));
-						sum[a]+=1-(img[i][j].r+img[i][j].g+img[i][j].b)/765.0;
+						sum[a]+=((int)img[i][j].r+img[i][j].g+img[i][j].b)/765.0;
 						cnt[a]++;
 					}
 				for(i=0;i<r*c;i++) sum[i]/=cnt[i];
 	    		data=fopen("bitmaps\\data","r");
-	    		lnum=0; psum=0;
+	    		lnum=0;
+				psum=0;
 				for(i=0;fscanf(data,"%s",numbers[i].lable)==1;i++,lnum++)
 				{
 					add=0;
 					for(j=0;j<r*c;j++)
 						fscanf(data,"%lf",&t),add+=t*sum[j];
+					fscanf(data,"%lf",&t);
+					add+=t;
 					numbers[i].p=sigma(add);
 					psum+=sigma(add);
 				}
