@@ -84,7 +84,7 @@ int main()
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),14);
 		printf("%d",score);
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),7);
-		printf("/%d",tot);
+		printf(" / %d",tot);
 		system("del temp.err > nul");
 		system("del temp.out > nul");
 		system("pause > nul");
