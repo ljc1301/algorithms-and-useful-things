@@ -17,7 +17,7 @@ int main()
 		freopen(str,"w",stdout);
 		lt=clock();
 		make(i);
-		fprintf(stderr,"data%d.in made, used %.3lf sec.\n",i,(clock()-lt)*1.0/CLOCKS_PER_SEC);
+		fprintf(stderr,"data%d.in  made, used %.3lf sec.\n",i,(clock()-lt)*1.0/CLOCKS_PER_SEC);
 		fclose(stdout);
 	}
 	for(i=0;i<10;i++)
