@@ -1,0 +1,90 @@
+27 1000000000000 1000000
+begin 1
+none P@,R,P1 new
+new 2
+@ R mark-digits
+else L new
+mark-digits 2
+0,1 R,Px,R mark-digits
+none R,Pz,R,R,Pr find-x
+find-x 3
+x E first-r
+@ None find-digits
+else L,L find-x
+first-r 2
+r R,R last-r
+else R,R first-r
+last-r 2
+r R,R last-r
+none Pr,R,R,Pr find-x
+find-digits 2
+@ R,R find-1st-digit
+else L,L find-digits
+find-1st-digit 3
+x,y L found-1st-digit
+z L found-2nd-digit
+none R,R find-1st-digit
+found-1st-digit 2
+0 R add-zero
+1 R,R,R find-2nd-digit
+find-2nd-digit 2
+x,y L found-2nd-digit
+none R,R find-2nd-digit
+found-2nd-digit 2
+0 R add-zero
+1,none R add-one
+add-zero 3
+r Ps add-finished
+u Pv add-finished
+else R,R add-zero
+add-one 3
+r Pv add-finished
+u Ps,R,R carry
+else R,R add-one
+carry 3
+r Pu add-finished
+none Pu new-digit-is-zero
+u Pr,R,R carry
+add-finished 2
+@ R,R erase-old-x
+else L,L add-finished
+erase-old-x 3
+x E,L,L print-new-x
+z Py,L,L print-new-x
+else R,R erase-old-x
+print-new-x 3
+@ R,R erase-old-y
+y Pz find-digits
+none Px find-digits
+erase-old-y 2
+y E,L,L print-new-y
+else R,R erase-old-y
+print-new-y 2
+@ R new-digit-is-one
+else Py,R reset-new-x
+reset-new-x 2
+none R,Px flag-result-digits
+else R,R reset-new-x
+flag-result-digits 3
+s Pt,R,R unflag-result-digits
+v Pw,R,R unflag-result-digits
+else R,R flag-result-digits
+unflag-result-digits 3
+s Pr,R,R unflag-result-digits
+v Pu,R,R unflag-result-digits
+else None find-digits
+new-digit-is-zero 2
+@ R print-zero-digit
+else L new-digit-is-zero
+print-zero-digit 2
+0,1 R,E,R print-zero-digit
+none P0,R,R,R cleanup
+new-digit-is-one 2
+@ R print-one-digit
+else L new-digit-is-one
+print-one-digit 2
+0,1 R,E,R print-one-digit
+none P1,R,R,R cleanup
+cleanup 2
+none None new
+else E,R,R cleanup
