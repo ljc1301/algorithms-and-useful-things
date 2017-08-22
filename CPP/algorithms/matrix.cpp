@@ -81,14 +81,14 @@ struct matrix
             }
         return true;
     }
-    matrix quickPow(int b)
+    matrix quickPow(long long b)
     {
         matrix ans;
         int i;
         ans.row=ans.col=row;
         if(!ans.getI() || row!=col) return ans;
         if(b==0) return ans;
-        i=1; i<<=30;
+        i=1; i<<=62;
         for(;i>b;i>>=1);
         for(;i>0;i>>=1)
         {
