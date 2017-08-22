@@ -5,6 +5,23 @@ struct matrix
     int row,col;
     double a[maxn][maxn];
     matrix() { memset(a,0,sizeof(a)); }
+    bool getI()
+    {
+        int i;
+        if(row!=col) return false;
+        memset(a,0,sizeof(a));
+        for(i=0;i<row;i++)
+            a[i][i]=1;
+        return true;
+    }
+    void getI(int sz)
+    {
+        int i;
+        row=col=sz;
+        memset(a,0,sizeof(a));
+        for(i=0;i<sz;i++)
+            a[i][i]=1;
+    }
     matrix operator *(const matrix& ma)
     {
         matrix ans;
@@ -33,8 +50,8 @@ struct matrix
         getAStart(t);
         ans.col=ans.row=col;
         for(i=0;i<col;i++)
-        for(j=0;j<col;j++)
-        ans.a[i][j]=t.a[i][j]/flag;
+            for(j=0;j<col;j++)
+                ans.a[i][j]=t.a[i][j]/flag;
         return true;
     }
     double getA()
@@ -84,7 +101,7 @@ struct matrix
     matrix quickPow(long long b)
     {
         matrix ans;
-        int i;
+        long long i;
         ans.row=ans.col=row;
         if(!ans.getI() || row!=col) return ans;
         if(b==0) return ans;
