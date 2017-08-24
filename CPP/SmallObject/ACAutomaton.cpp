@@ -44,7 +44,9 @@ void print_switch(int tabs,int node)
 {
 	int i,t;
 	print_tabs(tabs);
-	fprintf(source,"switch(getchar()) {\n");
+	fprintf(source,"do ch=getchar(); while(ch==\'\\r\');\n");
+	print_tabs(tabs);
+	fprintf(source,"switch(ch) {\n");
 	tabs++;
 	for(i=0;i<sigma_len;i++)
 		if(ne[node][i] && data[ne[node][i]]!=-1)
@@ -79,7 +81,7 @@ void print_switch(int tabs,int node)
 void print()
 {
 	int tabs=0;
-	fprintf(source,"#include <stdio.h>\nint main() {\n");
+	fprintf(source,"#include <stdio.h>\nint ch;\nint main() {\n");
 	tabs++;
 	print_switch(tabs,0);
 	print_tabs(tabs);
