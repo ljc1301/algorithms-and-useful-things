@@ -38,16 +38,21 @@ void doit(int p)
 }
 void print_tabs(int n)
 {
-	while(n--) fprintf(source,"    ");
+	while(n--) fprintf(source,"  ");
 }
 void print_switch(int tabs,int node)
 {
-	int i,t;
+	int i,t,cnt=0;
 	print_tabs(tabs);
 	fprintf(source,"do ch=getchar(); while(ch==\'\\r\');\n");
-	print_tabs(tabs);
-	fprintf(source,"switch(ch) {\n");
-	tabs++;
+	for(i=0;i<sigma_len;i++)
+		if(ne[node][i]) cnt++;
+	if(cnt!=1)
+	{
+		print_tabs(tabs);
+		fprintf(source,"switch(ch) {\n");
+		tabs++;
+	}
 	for(i=0;i<sigma_len;i++)
 		if(ne[node][i] && data[ne[node][i]]!=-1)
 		{
@@ -66,17 +71,26 @@ void print_switch(int tabs,int node)
 		}
 		else if(ne[node][i])
 		{
-			print_tabs(tabs);
-			fprintf(source,"case %d:\n",i-1);
-			tabs++;
+			if(cnt!=1)
+			{
+				print_tabs(tabs);
+				fprintf(source,"case %d:\n",i-1);
+				tabs++;
+			}
 			print_switch(tabs,ne[node][i]);
-			print_tabs(tabs);
-			fprintf(source,"break;\n");
-			tabs--;
+			if(cnt!=1)
+			{
+				print_tabs(tabs);
+				fprintf(source,"break;\n");
+				tabs--;
+			}
 		}
-	tabs--;
-	print_tabs(tabs);
-	fprintf(source,"}\n");
+	if(cnt!=1)
+	{
+		tabs--;
+		print_tabs(tabs);
+		fprintf(source,"}\n");
+	}
 }
 void print()
 {
