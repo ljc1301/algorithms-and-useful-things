@@ -164,7 +164,7 @@ struct cube
         }
     }
 }c;
-const int maxdep=15;
+const int maxdep=10;
 const char turns[6]={'L','F','R','B','U','D'};
 const char times[3]={'\0','\'','2'};
 set<cube> se;
