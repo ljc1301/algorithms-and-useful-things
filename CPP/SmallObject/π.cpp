@@ -2,7 +2,7 @@
 #include <cstring>
 #include <string>
 
-const int PREC = 20010;
+const int PREC = 2010;
 
 class Decimal {
     public:
@@ -343,5 +343,5 @@ int main() {
         if (i%4 == 3)
             ans -= tmp / i;
     }
-    printf("%s\n",ans.to_string(20000).c_str());
+    printf("%s\n",ans.to_string(2000).c_str());
 }
