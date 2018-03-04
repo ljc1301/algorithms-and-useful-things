@@ -6,7 +6,7 @@ using namespace std;
 const int maxn=2005;
 const int maxlen=1005;
 const int maxtupe=5;
-int mat[maxn][maxn][maxtupe],n=-1,m=-1,tupe=3,t;
+int mat[maxn][maxn][maxtupe],n=-1,m=-1,tupe=3,t,cnt;
 char s[maxlen],temp[maxlen];
 FILE *f;
 int main()
@@ -32,10 +32,11 @@ int main()
                 for(k=0;k<tupe;k++)
                 {
                     fscanf(f,"%d",&t);
-                    (mat[i][j][k]+=t)&=0xff;
+                    mat[i][j][k]+=t;
                 }
         fclose(f);
         system("echo > test.in");
+        cnt++;
     }
     f=fopen("test.out","w");
     fprintf(f,"%d %d\nRGB\n",n,m);
@@ -47,7 +48,7 @@ int main()
             {
                 if(k)
                     fprintf(f," ");
-                fprintf(f,"%d",mat[i][j][k]);
+                fprintf(f,"%d",(mat[i][j][k]+(cnt>>1))/cnt);
             }
             fprintf(f,"\n");
         }
