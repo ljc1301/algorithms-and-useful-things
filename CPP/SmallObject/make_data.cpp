@@ -1,6 +1,7 @@
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
+#include <bits/stdc++.h>
+using namespace std;
+int bigrand() { return rand()|(rand()<<15); }
+long long hugerand() { return bigrand()|((bigrand()+0ll)<<30); }
 void make(int p)
 {
 	//Input the code
