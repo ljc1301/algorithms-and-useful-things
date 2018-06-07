@@ -41,7 +41,7 @@ struct matrix
     {
         return *this=*this*ma;
     }
-    bool GetMatrixInverse(matrix& ans)
+    /* bool GetMatrixInverse(matrix& ans)
     {
         double flag=getA();
         matrix t;
@@ -55,7 +55,7 @@ struct matrix
             for(j=0;j<col;j++)
                 ans.a[i][j]=t.a[i][j]/flag;
         return true;
-    }
+    } */
     double getA()
     {
         if(col!=row) return 0;
