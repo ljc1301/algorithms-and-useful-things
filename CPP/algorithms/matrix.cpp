@@ -148,4 +148,41 @@ struct matrix
             res.a[i][0]=B.a[i][n];
         return res;
     }
+    bool GetMatrixInverse(matrix& ans) const
+    {
+        matrix temp;
+        int i,j,k,n=col;
+        double t;
+        if(col!=row) return false;
+        for(i=0;i<n;i++)
+            for(j=0;j<n;j++)
+                temp.a[i][j+n]=(i==j)?1:0;
+        for(i=0;i<n;i++)
+            for(j=0;j<n;j++)
+                temp.a[i][j]=a[i][j];
+        for(i=0;i<n;i++)
+        {
+            for(j=i;j<n && abs(temp.a[j][i])<1e-6;j++);
+            if(j>=n) return false;
+            if(i!=j)
+                for(k=0;k<2*n;k++)
+                    swap(temp.a[i][k],temp.a[j][k]);
+            t=temp.a[i][i];
+            for(j=0;j<2*n;j++)
+                temp.a[i][j]/=t;
+            for(j=0;j<n;j++)
+                if(i!=j)
+                {
+                    for(k=0;k<2*n;k++)
+                        if(i!=k)
+                            temp.a[j][k]-=temp.a[i][k]*temp.a[j][i];
+                    temp.a[j][i]=0;
+                }
+        }
+        ans.col=ans.row=n;
+        for(i=0;i<n;i++)
+            for(j=0;j<n;j++)
+                ans.a[i][j]=temp.a[i][j+n];
+        return true;
+    }
 };
