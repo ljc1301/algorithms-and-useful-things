@@ -2,7 +2,7 @@
 using namespace std;
 int bigrand() { return rand()|(rand()<<15); }
 long long hugerand() { return bigrand()|((bigrand()+0ll)<<30); }
-inline long long randint(long long l,long long r) { return hugerand()%(r-l+1)+l; }
+inline long long randint(long long l=0,long long r) { return hugerand()%(r-l+1)+l; }
 FILE *f;
 #define printf(format,args...) fprintf(f,format,##args)
 void make()
