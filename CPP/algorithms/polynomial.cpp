@@ -1,3 +1,5 @@
+const int maxlogn=20;
+const int maxn=(1<<maxlogn)|1;
 const int kcz=998244353;
 typedef long long ll;
 namespace polynomial
@@ -94,16 +96,22 @@ namespace polynomial
         int i;
         for(i=n;i>=0 && !f[i];i--);
         if(m>i) { memcpy(res,f,sizeof(ll)*(n+1)); return; }
+        // for(i=0;i<=n;i++) printf("%lld ",f[i]);
+        // printf("\n");
+        // for(i=0;i<=m;i++) printf("%lld ",g[i]);
+        // printf("\n");
         int logn;
         ll t;
         divide(f,g,res,n,m);
-        for(logn=0;(1<<logn)<n;logn++);
+        for(logn=0;(1<<logn)<=n;logn++);
         calcrev(logn),DFT(g,logn,0),DFT(res,logn,0);
         for(i=0;i<(1<<logn);i++) res[i]=res[i]*g[i]%kcz;
         DFT(res,logn,1);
         for(i=0,t=inv(1<<logn);i<m;i++)
             res[i]=(f[i]-res[i]*t)%kcz;
         for(;i<(1<<logn);i++) res[i]=0;
+        // for(i=0;i<m;i++) printf("%lld ",res[i]);
+        // printf("\n\n");
     }
     ll temp1[maxlogn][maxn],h[maxn];
     inline void query(ll *f,ll *a,ll *res,int n,int m)
@@ -143,6 +151,81 @@ namespace polynomial
                 modulo(temp1[i]+j,temp1[i-1]+j,h,min((1<<i)-1,n),mid);
                 memcpy(res+j,h,sizeof(ll)<<(i-1));
             }
+    }
+    ll temp2[maxlogn][maxn];
+    inline void interpolate(ll *x,ll *y,ll *f,int n)
+    {
+        int i,logn,j,k,mid;
+        ll t;
+        for(logn=0;(1<<logn)<n;logn++);
+        for(i=0;i<n;i++)
+            temp1[0][i]=-x[i];
+        for(;i<(1<<logn);i++) temp1[0][i]=0;
+        for(i=1;i<=logn;i++)
+            for(j=0,mid=1<<(i-1),calcrev(i),t=inv(1<<i);j<(1<<logn);j+=1<<i)
+                if((j|mid)<n)
+                {
+                    memcpy(h,temp1[i-1]+j,sizeof(ll)<<(i-1));
+                    memset(h+mid,0,sizeof(ll)<<(i-1));
+                    memcpy(temp,temp1[i-1]+(j|mid),sizeof(ll)<<(i-1));
+                    memset(temp+mid,0,sizeof(ll)<<(i-1));
+                    h[mid]=temp[min(j+(1<<i),n)-(j|mid)]=1;
+                    DFT(h,i,0),DFT(temp,i,0);
+                    for(k=0;k<(1<<i);k++) temp[k]=h[k]*temp[k]%kcz;
+                    DFT(temp,i,1);
+                    for(k=0;k<(1<<i);k++) temp1[i][j|k]=temp[k]*t%kcz;
+                    if(j+(1<<i)<=n) temp1[i][j]=(temp1[i][j]-1)%kcz;
+                    else temp1[i][n]=(temp1[i][n]-1)%kcz;
+                }
+                else
+                    memcpy(temp1[i]+j,temp1[i-1]+j,sizeof(ll)<<i);
+        for(i=0;i<=logn;i++)
+            for(j=0;j<(1<<logn);j++)
+                temp2[i][j]=temp1[i][j];
+        temp1[logn][n]=1;
+        for(i=0;i<n;i++)
+            temp1[logn][i]=temp1[logn][i+1]*(i+1)%kcz;
+        temp1[logn][n]=0;
+        for(i=logn;i>=1;i--,memcpy(temp1[i],f,sizeof(ll)<<logn))
+            for(j=(1<<logn)-(1<<i),mid=1<<(i-1);j>=0;j-=(1<<i))
+                if((j|mid)<n)
+                {
+                    temp1[i-1][min(j+(1<<i),n)]=1;
+                    modulo(temp1[i]+j,temp1[i-1]+(j|mid),h,min(1<<i,n-j)-1,min(mid,n-(j|mid)));
+                    memcpy(f+(j|mid),h,sizeof(ll)<<(i-1));
+                    temp1[i-1][j|mid]=1;
+                    modulo(temp1[i]+j,temp1[i-1]+j,h,min(1<<i,n-j)-1,mid);
+                    memcpy(f+j,h,sizeof(ll)<<(i-1));
+                }
+                else
+                    memcpy(f+j,temp1[i]+j,sizeof(ll)<<i);
+        for(i=0;i<n;i++) temp1[0][i]=y[i]*inv(temp1[0][i])%kcz;
+        for(i=1;i<=logn;i++)
+            for(j=0,mid=1<<(i-1),calcrev(i),t=inv(1<<i);j<(1<<logn);j+=1<<i)
+                if((j|mid)<n)
+                {
+                    memcpy(h,temp1[i-1]+j,sizeof(ll)<<(i-1));
+                    memset(h+mid,0,sizeof(ll)<<(i-1));
+                    memcpy(temp,temp2[i-1]+(j|mid),sizeof(ll)<<(i-1));
+                    memset(temp+mid,0,sizeof(ll)<<(i-1));
+                    temp[min(mid,n-mid-j)]=1;
+                    DFT(h,i,0),DFT(temp,i,0);
+                    for(k=0;k<(1<<i);k++) temp[k]=h[k]*temp[k]%kcz;
+                    DFT(temp,i,1);
+                    for(k=0;k<(1<<i);k++) temp1[i][j|k]=temp[k]*t%kcz;
+                    memcpy(h,temp2[i-1]+j,sizeof(ll)<<(i-1));
+                    memset(h+mid,0,sizeof(ll)<<(i-1));
+                    memcpy(temp,temp1[i-1]+(j|mid),sizeof(ll)<<(i-1));
+                    memset(temp+mid,0,sizeof(ll)<<(i-1));
+                    h[mid]=1;
+                    DFT(h,i,0),DFT(temp,i,0);
+                    for(k=0;k<(1<<i);k++) temp[k]=h[k]*temp[k]%kcz;
+                    DFT(temp,i,1);
+                    for(k=0;k<(1<<i);k++) (temp1[i][j|k]+=temp[k]*t)%=kcz;
+                }
+            else memcpy(temp1[i]+j,temp1[i-1]+j,sizeof(ll)<<i);
+        for(i=0;i<n;i++) f[i]=temp1[logn][i];
+        for(;i<(1<<logn);i++) f[i]=0;
     }
     #undef inv
 }
