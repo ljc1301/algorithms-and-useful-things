@@ -51,7 +51,7 @@ namespace polynomial
                 }
     }
     ll temp[maxn];
-    inline void inverse(const ll *f,ll *g,int n)
+    inline void inverse(const ll *f,ll *g,int n) // mod x^n
     {
         int logn,i;
         long long t,t1=inv(2);
@@ -96,10 +96,6 @@ namespace polynomial
         int i;
         for(i=n;i>=0 && !f[i];i--);
         if(m>i) { memcpy(res,f,sizeof(ll)*(n+1)); return; }
-        // for(i=0;i<=n;i++) printf("%lld ",f[i]);
-        // printf("\n");
-        // for(i=0;i<=m;i++) printf("%lld ",g[i]);
-        // printf("\n");
         int logn;
         ll t;
         divide(f,g,res,n,m);
@@ -110,11 +106,9 @@ namespace polynomial
         for(i=0,t=inv(1<<logn);i<m;i++)
             res[i]=(f[i]-res[i]*t)%kcz;
         for(;i<(1<<logn);i++) res[i]=0;
-        // for(i=0;i<m;i++) printf("%lld ",res[i]);
-        // printf("\n\n");
     }
     ll temp1[maxlogn][maxn],h[maxn];
-    inline void query(ll *f,ll *a,ll *res,int n,int m)
+    inline void query(ll *f,ll *a,ll *res,int n,int m) // n次
     {
         int i,logm,j,k,mid;
         ll t;
@@ -226,6 +220,23 @@ namespace polynomial
             else memcpy(temp1[i]+j,temp1[i-1]+j,sizeof(ll)<<i);
         for(i=0;i<n;i++) f[i]=temp1[logn][i];
         for(;i<(1<<logn);i++) f[i]=0;
+    }
+    inline void polyln(const ll *f,ll *g,int n) // mod x^n
+    {
+        int i,logn;
+        ll t;
+        for(logn=0;(1<<logn)<(n<<1);logn++);
+        inverse(f,g,n);
+        for(i=0;i<n-1;i++)
+            temp[i]=f[i+1]*(i+1)%kcz;
+        temp[n-1]=0;
+        for(i=n;i<(1<<logn);i++)
+            temp[i]=g[i]=0;
+        calcrev(logn),DFT(g,logn,0),DFT(temp,logn,0);
+        for(i=0;i<(1<<logn);i++) temp[i]=g[i]*temp[i]%kcz;
+        DFT(temp,logn,1);
+        for(t=inv(1<<logn),i=1,g[0]=0;i<n;i++)
+            g[i]=temp[i-1]*inv(i)%kcz*t%kcz;
     }
     #undef inv
 }
