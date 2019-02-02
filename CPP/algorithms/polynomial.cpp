@@ -35,7 +35,7 @@ namespace polynomial
         for(i=1;i<(1<<logn);i++)
             rev[i]=(rev[i>>1]>>1)|((i&1)<<(logn-1));
     }
-    inline void DFT(ll *a,int logn,int flag)
+    inline void DFT(ll *a,int logn,int flag) // O(nlogn)
     {
         register int i,j,k,mid;
         register ll t1,t2,t;
@@ -51,7 +51,7 @@ namespace polynomial
                 }
     }
     ll temp[maxn];
-    inline void inverse(const ll *f,ll *g,int n) // mod x^n
+    inline void inverse(const ll *f,ll *g,int n) // mod x^n, O(nlogn)
     {
         int logn,i;
         long long t,t1=inv(2);
@@ -72,7 +72,7 @@ namespace polynomial
             g[i]=0;
     }
     ll ig[maxn];
-    inline void divide(ll *f,ll *g,ll *res,int n,int m) //n、m次
+    inline void divide(ll *f,ll *g,ll *res,int n,int m) //n、m次, O(nlogn)
     {
         int logn,i;
         ll t;
@@ -91,7 +91,7 @@ namespace polynomial
             res[i]=0;
         reverse(res,res+n-m+1),reverse(f,f+n+1),reverse(g,g+m+1);
     }
-    inline void modulo(ll *f,ll *g,ll *res,int n,int m) //n、m次，g发生改变
+    inline void modulo(ll *f,ll *g,ll *res,int n,int m) //n、m次，g发生改变, O(nlogn)
     {
         int i;
         for(i=n;i>=0 && !f[i];i--);
@@ -108,7 +108,7 @@ namespace polynomial
         for(;i<(1<<logn);i++) res[i]=0;
     }
     ll temp1[maxlogn][maxn],h[maxn];
-    inline void query(ll *f,ll *a,ll *res,int n,int m) // n次
+    inline void query(ll *f,ll *a,ll *res,int n,int m) // n次, O(nlog^2n)
     {
         int i,logm,j,k,mid;
         ll t;
@@ -147,7 +147,7 @@ namespace polynomial
             }
     }
     ll temp2[maxlogn][maxn];
-    inline void interpolate(ll *x,ll *y,ll *f,int n)
+    inline void interpolate(ll *x,ll *y,ll *f,int n) // O(nlogn^2n)
     {
         int i,logn,j,k,mid;
         ll t;
@@ -221,7 +221,7 @@ namespace polynomial
         for(i=0;i<n;i++) f[i]=temp1[logn][i];
         for(;i<(1<<logn);i++) f[i]=0;
     }
-    inline void polyln(const ll *f,ll *g,int n) // mod x^n
+    inline void polyln(const ll *f,ll *g,int n) // mod x^n, O(nlogn), assert(f[0]==1)
     {
         int i,logn;
         ll t;
@@ -237,6 +237,26 @@ namespace polynomial
         DFT(temp,logn,1);
         for(t=inv(1<<logn),i=1,g[0]=0;i<n;i++)
             g[i]=temp[i-1]*inv(i)%kcz*t%kcz;
+    }
+    inline void polyexp(const ll *f,ll *g,int n) // mod x^n, O(nlogn), assert(f[0]==0)
+    {
+        int logn,i;
+        long long t,t1=inv(2);
+        for(logn=0,g[0]=1,t=t1;(1<<logn)<n;logn++)
+        {
+            memset(g+(1<<logn),0,sizeof(ll)*(3<<logn));
+            polyln(g,temp3,2<<logn);
+            memset(temp3+(2<<logn),0,sizeof(ll)*(2<<logn));
+            for(i=0;i<(2<<logn);i++) temp3[i]=(f[i]+(!i)-temp3[i])%kcz;
+            calcrev(logn+2);
+            DFT(temp3,logn+2,0),DFT(g,logn+2,0);
+            for(i=0;i<(4<<logn);i++) temp3[i]=temp3[i]*g[i]%kcz;
+            DFT(temp3,logn+2,1);
+            for(i=0,(t*=t1)%=kcz;i<(2<<logn);i++)
+                g[i]=t*temp3[i]%kcz;
+        }
+        for(i=n;i<(1<<logn);i++)
+            g[i]=0;
     }
     #undef inv
 }
