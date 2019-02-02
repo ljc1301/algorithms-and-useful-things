@@ -245,15 +245,36 @@ namespace polynomial
         for(logn=0,g[0]=1,t=t1;(1<<logn)<n;logn++)
         {
             memset(g+(1<<logn),0,sizeof(ll)*(3<<logn));
-            polyln(g,temp3,2<<logn);
-            memset(temp3+(2<<logn),0,sizeof(ll)*(2<<logn));
-            for(i=0;i<(2<<logn);i++) temp3[i]=(f[i]+(!i)-temp3[i])%kcz;
+            polyln(g,h,2<<logn);
+            memset(h+(2<<logn),0,sizeof(ll)*(2<<logn));
+            for(i=0;i<(2<<logn);i++) h[i]=(f[i]+(!i)-h[i])%kcz;
             calcrev(logn+2);
-            DFT(temp3,logn+2,0),DFT(g,logn+2,0);
-            for(i=0;i<(4<<logn);i++) temp3[i]=temp3[i]*g[i]%kcz;
-            DFT(temp3,logn+2,1);
+            DFT(h,logn+2,0),DFT(g,logn+2,0);
+            for(i=0;i<(4<<logn);i++) h[i]=h[i]*g[i]%kcz;
+            DFT(h,logn+2,1);
             for(i=0,(t*=t1)%=kcz;i<(2<<logn);i++)
-                g[i]=t*temp3[i]%kcz;
+                g[i]=t*h[i]%kcz;
+        }
+        for(i=n;i<(1<<logn);i++)
+            g[i]=0;
+    }
+    inline void polysqrt(const ll *f,ll *g,int n) // mod x^n, O(nlogn), assert(f[0]==1)
+    {
+        int logn,i;
+        long long t,t1=inv(2);
+        for(logn=0,g[0]=1,t=t1;(1<<logn)<n;logn++)
+        {
+            memset(g+(1<<logn),0,sizeof(ll)*(3<<logn));
+            inverse(g,ig,2<<logn);
+            memset(ig+(2<<logn),0,sizeof(ll)*(2<<logn));
+            memcpy(h,f,sizeof(ll)*(2<<logn));
+            memset(h+(2<<logn),0,sizeof(ll)*(2<<logn));
+            calcrev(logn+2);
+            DFT(ig,logn+2,0),DFT(h,logn+2,0);
+            for(i=0;i<(4<<logn);i++) h[i]=h[i]*ig[i]%kcz;
+            DFT(h,logn+2,1);
+            for(i=0,(t*=t1)%=kcz;i<(2<<logn);i++)
+                g[i]=(t*h[i]+g[i])%kcz*t1%kcz;
         }
         for(i=n;i<(1<<logn);i++)
             g[i]=0;
