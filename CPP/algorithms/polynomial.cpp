@@ -51,7 +51,7 @@ namespace polynomial
                 }
     }
     ll temp[maxn];
-    inline void inverse(const ll *f,ll *g,int n) // mod x^n, O(nlogn)
+    inline void inverse(const ll *f,ll *g,int n) // mod x^n, O(nlogn), assert(f[0]!=0)
     {
         int logn,i;
         long long t,t1=inv(2);
