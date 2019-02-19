@@ -79,7 +79,7 @@ namespace polynomial
                 }
     }
     complex a[maxn],b[maxn],c[maxn],d[maxn];
-    inline void MTT(ll *f,const ll *g,int logn,int kcz)
+    inline void MTT(ll *f,const ll *g,int logn,int kcz) // O(nlogn), %kcz
     {
         int i;
         complex x,y,z;
