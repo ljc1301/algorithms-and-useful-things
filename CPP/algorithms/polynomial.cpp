@@ -2,10 +2,20 @@ const int maxlogn=20;
 const int maxn=(1<<maxlogn)|1;
 const int kcz=998244353;
 typedef long long ll;
+typedef long double ld;
 namespace polynomial
 {
     ll G[2][24];
     int rev[maxn];
+    const long double pi=acosl(-1);
+    struct complex
+    {
+        ld a,b;
+        complex(ld a=0,ld b=0):a(a),b(b) {}
+        inline complex operator +(const complex &x) { return complex(a+x.a,b+x.b); }
+        inline complex operator -(const complex &x) { return complex(a-x.a,b-x.b); }
+        inline complex operator *(const complex &x) { return complex(a*x.a-b*x.b,a*x.b+b*x.a); }
+    }w[maxn];
     inline ll qpow(ll a,int k)
     {
         ll res=1;
@@ -20,7 +30,9 @@ namespace polynomial
     #define inv(x) qpow(x,kcz-2)
     void init()
     {
-        int i;
+        register int i;
+        for(i=0;i<maxn;i++)
+            w[i]=complex(cosl(2*pi*i/(1<<maxlogn)),sinl(2*pi*i/(1<<maxlogn)));
         G[1][23]=inv(G[0][23]=qpow(3,(kcz-1)>>23));
         for(i=22;i>=0;i--)
         {
@@ -28,7 +40,7 @@ namespace polynomial
             G[1][i]=G[1][i+1]*G[1][i+1]%kcz;
         }
     }
-    inline void calcrev(int logn)
+    inline void calcrev(int logn) // O(n)
     {
         register int i;
         rev[0]=0;
@@ -49,6 +61,44 @@ namespace polynomial
                     t1=a[j|k],t2=t*a[j|k|mid];
                     a[j|k]=(t1+t2)%kcz,a[j|k|mid]=(t1-t2)%kcz;
                 }
+    }
+    inline void DFT(complex *a,int logn,int flag) // O(nlogn)
+    {
+        register int i,j,k,mid;
+        register complex temp;
+        for(i=0;i<(1<<logn);i++)
+            if(rev[i]<i)
+                swap(a[rev[i]],a[i]);
+        for(i=1;i<=logn;i++)
+            for(mid=1<<(i-1),j=0;j<(1<<logn);j+=1<<i)
+                for(k=0;k<mid;k++)
+                {
+                    temp=w[flag?(1<<maxlogn)-(k<<(maxlogn-i)):(k<<(maxlogn-i))]*a[j|k|mid];
+                    a[j|k|mid]=a[j|k]-temp;
+                    a[j|k]=a[j|k]+temp;
+                }
+    }
+    complex a[maxn],b[maxn],c[maxn],d[maxn];
+    inline void MTT(ll *f,const ll *g,int logn,int kcz)
+    {
+        int i;
+        complex x,y,z;
+        calcrev(logn);
+        for(i=0;i<(1<<logn);i++)
+        {
+            a[i]=complex(f[i]&0x7fff),b[i]=complex(f[i]>>15);
+            c[i]=complex(g[i]&0x7fff),d[i]=complex(g[i]>>15);
+        }
+        DFT(a,logn,0),DFT(b,logn,0),DFT(c,logn,0),DFT(d,logn,0);
+        for(i=0;i<(1<<logn);i++)
+        {
+            x=a[i]*c[i],y=a[i]*d[i]+b[i]*c[i],z=b[i]*d[i];
+            a[i]=x,b[i]=y,c[i]=z;
+        }
+        DFT(a,logn,1),DFT(b,logn,1),DFT(c,logn,1);
+        for(i=0;i<(1<<logn);i++)
+            f[i]=((ll)(a[i].a/(1<<logn)+0.5)+(((ll)(b[i].a/(1<<logn)+0.5)%kcz)<<15)
+                +(((ll)(c[i].a/(1<<logn)+0.5)%kcz)<<30))%kcz;
     }
     ll temp[maxn];
     inline void inverse(const ll *f,ll *g,int n) // mod x^n, O(nlogn), assert(f[0]!=0)
