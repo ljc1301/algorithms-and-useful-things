@@ -79,11 +79,12 @@ namespace polynomial
                 }
     }
     complex a[maxn],b[maxn],c[maxn],d[maxn];
-    inline void MTT(ll *f,const ll *g,int logn,int kcz) // O(nlogn), %kcz
+    inline void MTT(ll *f,ll *g,int logn,int kcz) // O(nlogn), %kcz
     {
         int i;
         complex x,y,z;
         calcrev(logn);
+        for(i=0;i<(1<<logn);i++) f[i]=(f[i]%kcz+kcz)%kcz,g[i]=(g[i]%kcz+kcz)%kcz;
         for(i=0;i<(1<<logn);i++)
         {
             a[i]=complex(f[i]&0x7fff),b[i]=complex(f[i]>>15);
