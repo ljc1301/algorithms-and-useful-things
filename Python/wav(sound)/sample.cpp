@@ -5,6 +5,7 @@ const int maxlogn=18;
 const int maxn=(1<<maxlogn)|1;
 const int framerate=65536;
 const int nchannels=1;
+const int sampwidth=2;
 const int speed=16384;
 // const int maxn=10000;
 const db tau=2*acosl(-1);
@@ -75,7 +76,7 @@ inline void make()
     fclose(f);
     for(i=0;i<n;i++) data[i]=feq[pos[data[i]]];
     f=fopen("test.out","w");
-    fprintf(f,"%d %d\n",nchannels,framerate);
+    fprintf(f,"%d %d %d\n",nchannels,sampwidth,framerate);
     for(i=0;i<nchannels;fprintf(f,"\n"),i++)
         for(j=0,x=0;j<speed*n;j++)
         {
@@ -92,7 +93,7 @@ inline void solve()
     init();
     system("python3 ./files/load_wav.py ./files/out.wav > test.in");
     f=fopen("test.in","r"),out=fopen("std.out","w");
-    fscanf(f,"%d%d%d",&i,&j,&n); assert(i==nchannels && j==framerate);
+    fscanf(f,"%d%d%d%d",&i,&j,&maxx,&n); assert(i==nchannels && j==sampwidth && maxx==framerate);
     logn=14;
     calcrev(logn);
     for(i=0;s[i];i++) pos[feq[i]/4]=i;
