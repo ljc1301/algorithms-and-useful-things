@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import wave
+# import pylab as pl
 import numpy as np
 import sys
 
@@ -18,7 +19,7 @@ f.close()
 wave_data = np.frombuffer(str_data, dtype=np.short)
 wave_data.shape = -1, nchannels
 wave_data = wave_data.T
-print(nchannels, framerate, nframes)
+print(nchannels, sampwidth, framerate, nframes)
 for i in wave_data:
     for j in i:
         print(j,end=' ')
