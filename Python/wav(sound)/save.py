@@ -4,7 +4,7 @@ import numpy as np
 # import scipy.signal as signal
 import sys
 
-nchannels,framerate = [int(i) for i in input().split()]
+nchannels,sampwidth,framerate = [int(i) for i in input().split()]
 
 # time = 10
 
@@ -25,7 +25,7 @@ f = wave.open(sys.argv[1], "wb")
 
 # 配置声道数、量化位数和取样频率
 f.setnchannels(nchannels)
-f.setsampwidth(2)
+f.setsampwidth(sampwidth)
 f.setframerate(framerate)
 # 将wav_data转换为二进制数据写入文件
 f.writeframes(wave_data.tostring())
