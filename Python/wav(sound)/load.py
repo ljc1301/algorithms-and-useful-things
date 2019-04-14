@@ -16,7 +16,7 @@ str_data = f.readframes(nframes)
 f.close()
 #将波形数据转换为数组
 # wave_data = np.fromstring(str_data, dtype=np.short)
-wave_data = np.frombuffer(str_data, dtype=np.short)
+wave_data = np.frombuffer(str_data, dtype=np.dtype('i%d'%sampwidth))
 wave_data.shape = -1, nchannels
 wave_data = wave_data.T
 print(nchannels, sampwidth, framerate, nframes)
