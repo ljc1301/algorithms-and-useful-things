@@ -16,7 +16,7 @@ nchannels,sampwidth,framerate = [int(i) for i in input().split()]
 wave_data=np.array([])
 for channel in range(nchannels):
     wave_data=np.append(wave_data,np.array([int(i) for i in input().split()]))
-wave_data=wave_data.astype(np.short)
+wave_data=wave_data.astype(np.dtype('i%d'%sampwidth))
 wave_data.shape=nchannels,-1
 wave_data=wave_data.T
 
