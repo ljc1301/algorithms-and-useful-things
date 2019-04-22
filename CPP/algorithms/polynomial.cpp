@@ -119,7 +119,7 @@ namespace polynomial
             for(i=0,(t*=t1)%=kcz;i<(2<<logn);i++)
                 g[i]=t*temp[i]%kcz;
         }
-        for(i=n;i<(1<<logn);i++)
+        for(i=n;i<(2<<logn);i++)
             g[i]=0;
     }
     ll ig[maxn];
@@ -306,7 +306,7 @@ namespace polynomial
             for(i=0,(t*=t1)%=kcz;i<(2<<logn);i++)
                 g[i]=t*h[i]%kcz;
         }
-        for(i=n;i<(1<<logn);i++)
+        for(i=n;i<(2<<logn);i++)
             g[i]=0;
     }
     inline void polysqrt(const ll *f,ll *g,int n) // mod x^n, O(nlogn), assert(f[0]==1)
@@ -327,7 +327,7 @@ namespace polynomial
             for(i=0,(t*=t1)%=kcz;i<(2<<logn);i++)
                 g[i]=(t*h[i]+g[i])%kcz*t1%kcz;
         }
-        for(i=n;i<(1<<logn);i++)
+        for(i=n;i<(2<<logn);i++)
             g[i]=0;
     }
     #undef inv
