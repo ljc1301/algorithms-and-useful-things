@@ -123,7 +123,7 @@ namespace polynomial
             g[i]=0;
     }
     ll ig[maxn];
-    inline void divide(ll *f,ll *g,ll *res,int n,int m) //n、m次, O(nlogn)
+    inline void divide(ll *f,ll *g,ll *res,int n,int m) // x^0~n, x^0~m, O(nlogn)
     {
         int logn,i;
         ll t;
@@ -142,7 +142,7 @@ namespace polynomial
             res[i]=0;
         reverse(res,res+n-m+1),reverse(f,f+n+1),reverse(g,g+m+1);
     }
-    inline void modulo(ll *f,ll *g,ll *res,int n,int m) //n、m次，g发生改变, O(nlogn)
+    inline void modulo(ll *f,ll *g,ll *res,int n,int m) // x^0~n, x^0~m, g would be changed, O(nlogn)
     {
         int i;
         for(i=n;i>=0 && !f[i];i--);
@@ -159,7 +159,7 @@ namespace polynomial
         for(;i<(1<<logn);i++) res[i]=0;
     }
     ll temp1[maxlogn][maxn],h[maxn];
-    inline void query(ll *f,ll *a,ll *res,int n,int m) // n次, O(nlog^2n)
+    inline void query(ll *f,ll *a,ll *res,int n,int m) // x^0~n, O(nlog^2n)
     {
         int i,logm,j,k,mid;
         ll t;
